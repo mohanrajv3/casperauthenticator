@@ -1,0 +1,29 @@
+# CASPER Authenticator Project Rules
+
+## Project Overview
+This is a CASPER-based authenticator implementation with Android app and Spring Boot backends.
+
+## Code Style
+- Use Java 17+ features
+- Follow Android coding conventions
+- Use meaningful variable names
+- Add Javadoc comments for public methods
+- Keep methods focused and single-purpose
+
+## Security Practices
+- Never log sensitive data (PINs, private keys)
+- Use secure random number generation
+- Validate all user inputs
+- Use HTTPS in production
+- Store secrets securely (Android Keystore)
+
+## Project Structure
+- Android app: `app/src/main/java/com/casper/authenticator/`
+- PMS backend: `pms-backend/casper-pms/`
+- RP backend: `rp-backend/casper-rp/`
+
+## Testing
+- Test CASPER breach detection scenarios
+- Verify encryption/decryption flows
+- Test network error handling
+

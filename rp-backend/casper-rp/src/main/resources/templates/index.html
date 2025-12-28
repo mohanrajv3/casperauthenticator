@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASPER RP Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .endpoint {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        .breach {
+            background: #ffcdd2;
+            color: #c62828;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 CASPER Relying Party Demo</h1>
+        
+        <div class="info">
+            <h3>What is CASPER?</h3>
+            <p>CASPER (Passkey Breach Detection) is a system that detects when encrypted passkey data 
+            is stolen from cloud storage and used by attackers.</p>
+            
+            <h4>How it works:</h4>
+            <ol>
+                <li>User generates k detection secrets (W), one real (w*), others decoys</li>
+                <li>Real secret is selected using PIN: w* = W[H(PIN) mod k]</li>
+                <li>Passkey private key is encrypted: s̃ = HKDF(w*, z) XOR s</li>
+                <li>Encrypted passkey + detection secrets stored in cloud PMS</li>
+                <li>RP stores public keys: real (V) and decoys (V' = trap keys)</li>
+                <li>During login: If login key ∈ V' → BREACH DETECTED</li>
+            </ol>
+        </div>
+        
+        <div class="info">
+            <h3>API Endpoints</h3>
+            <div class="endpoint">
+                <strong>POST</strong> /api/auth/register<br>
+                Register passkeys (real + decoys)
+            </div>
+            <div class="endpoint">
+                <strong>POST</strong> /api/auth/login<br>
+                Login with passkey signature (includes breach detection)
+            </div>
+        </div>
+        
+        <div class="info">
+            <h3>RP Status</h3>
+            <p>Server running on port 8081</p>
+            <p>Use the Android app to register and login with passkeys.</p>
+            <p>When an attacker uses a stolen decoy secret, CASPER will detect the breach!</p>
+        </div>
+        
+        <div class="info">
+            <h3>Demo Scenario</h3>
+            <ol>
+                <li><strong>Normal Login:</strong> User uses correct PIN → real secret → real passkey → ✅ Normal login</li>
+                <li><strong>Breach Detection:</strong> Attacker uses wrong PIN/decoy secret → fake passkey → ⚠️ BREACH DETECTED</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
+

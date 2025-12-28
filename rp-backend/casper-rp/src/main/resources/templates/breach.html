@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASPER Breach Detected</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffebee;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 3px solid #c62828;
+        }
+        h1 {
+            color: #c62828;
+            text-align: center;
+        }
+        .alert {
+            background: #ffcdd2;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 5px solid #c62828;
+        }
+        .info {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚠️ CASPER BREACH DETECTED!</h1>
+        
+        <div class="alert">
+            <h2>Security Alert</h2>
+            <p>A decoy passkey was used during login. This indicates that:</p>
+            <ul>
+                <li>Encrypted passkey data may have been stolen from cloud storage</li>
+                <li>An attacker attempted to decrypt using a wrong PIN/decoy secret</li>
+                <li>The attacker generated a fake passkey using a decoy secret</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>How CASPER Detected This:</h3>
+            <ol>
+                <li>During registration, RP stored real passkey (V) and decoy passkeys (V')</li>
+                <li>Attacker stole encrypted data from PMS but didn't know the correct PIN</li>
+                <li>Attacker tried wrong PIN → selected decoy secret → generated fake passkey</li>
+                <li>Login attempt used fake passkey public key → key ∈ V' → BREACH DETECTED ✅</li>
+            </ol>
+        </div>
+        
+        <div class="info">
+            <h3>Recommended Actions:</h3>
+            <ul>
+                <li>Revoke the compromised passkey</li>
+                <li>Generate a new passkey with new detection secrets</li>
+                <li>Investigate the security breach</li>
+                <li>Notify the user about the security incident</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
