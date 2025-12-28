@@ -24,9 +24,9 @@ CREATE TABLE encrypted_passkeys (
 CREATE INDEX idx_encrypted_passkeys_user_rp ON encrypted_passkeys(user_id, rp_id);
 CREATE INDEX idx_encrypted_passkeys_user ON encrypted_passkeys(user_id);
 
--- Comments
-COMMENT ON TABLE encrypted_passkeys IS 'Stores encrypted passkey data. PMS never decrypts this data.';
-COMMENT ON COLUMN encrypted_passkeys.encrypted_private_key IS 'Encrypted private key: s̃ = HKDF(w*, z) XOR s';
-COMMENT ON COLUMN encrypted_passkeys.detection_secrets IS 'Array of k detection secrets (W), one real (w*), others decoys';
-COMMENT ON COLUMN encrypted_passkeys.real_secret_index IS 'Index of real secret selected by PIN: w* = W[H(PIN) mod k]';
+-- Comments (PostgreSQL syntax - not supported by H2, kept for documentation)
+-- COMMENT ON TABLE encrypted_passkeys IS 'Stores encrypted passkey data. PMS never decrypts this data.';
+-- COMMENT ON COLUMN encrypted_passkeys.encrypted_private_key IS 'Encrypted private key: s̃ = HKDF(w*, z) XOR s';
+-- COMMENT ON COLUMN encrypted_passkeys.detection_secrets IS 'Array of k detection secrets (W), one real (w*), others decoys';
+-- COMMENT ON COLUMN encrypted_passkeys.real_secret_index IS 'Index of real secret selected by PIN: w* = W[H(PIN) mod k]';
 

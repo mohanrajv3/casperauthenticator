@@ -5,12 +5,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'com.android.tools.build:gradle:8.1.4'
     }
 }
 
-// Repositories are declared in settings.gradle
-// Removed allprojects block to avoid conflict with FAIL_ON_PROJECT_REPOS
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

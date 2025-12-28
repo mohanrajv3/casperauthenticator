@@ -35,9 +35,9 @@ CREATE INDEX idx_login_attempts_user_rp ON login_attempts(user_id, rp_id);
 CREATE INDEX idx_login_attempts_breach ON login_attempts(breach_detected);
 CREATE INDEX idx_login_attempts_timestamp ON login_attempts(timestamp);
 
--- Comments
-COMMENT ON TABLE passkeys IS 'Stores registered passkey public keys. First key (is_real=true) is real (V), others are trap keys (V\')';
-COMMENT ON COLUMN passkeys.is_real IS 'true = real passkey (V), false = decoy/trap key (V\') for CASPER breach detection';
-COMMENT ON TABLE login_attempts IS 'Records login attempts with CASPER breach detection results';
-COMMENT ON COLUMN login_attempts.breach_detected IS 'CASPER CD algorithm: true if login key ∈ V\' (trap keys), false if ∈ V (real key)';
+-- Comments (PostgreSQL syntax - not supported by H2, kept for documentation)
+-- COMMENT ON TABLE passkeys IS 'Stores registered passkey public keys. First key (is_real=true) is real (V), others are trap keys (V'')';
+-- COMMENT ON COLUMN passkeys.is_real IS 'true = real passkey (V), false = decoy/trap key (V'') for CASPER breach detection';
+-- COMMENT ON TABLE login_attempts IS 'Records login attempts with CASPER breach detection results';
+-- COMMENT ON COLUMN login_attempts.breach_detected IS 'CASPER CD algorithm: true if login key ∈ V'' (trap keys), false if ∈ V (real key)';
 
