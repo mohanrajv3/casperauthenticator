@@ -7,6 +7,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Retrofit API interface for Passkey Management Service (PMS).
@@ -29,10 +30,10 @@ public interface PMSApi {
      * Fetch encrypted passkey data from PMS.
      * 
      * @param userId User ID
-     * @param rpId Relying Party ID
+     * @param rpId Relying Party ID (as query parameter to support URLs with special characters)
      * @return Call with PasskeyData response
      */
-    @GET("api/passkeys/{userId}/{rpId}")
-    Call<PasskeyData> fetchPasskey(@Path("userId") String userId, @Path("rpId") String rpId);
+    @GET("api/passkeys/{userId}")
+    Call<PasskeyData> fetchPasskey(@Path("userId") String userId, @Query("rpId") String rpId);
 }
 

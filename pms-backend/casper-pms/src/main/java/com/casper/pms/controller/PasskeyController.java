@@ -96,10 +96,10 @@ public class PasskeyController {
      *   "z": "base64-encoded-z-value"
      * }
      */
-    @GetMapping("/{userId}/{rpId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<Map<String, Object>> fetchPasskey(
             @PathVariable String userId,
-            @PathVariable String rpId) {
+            @RequestParam String rpId) {
         try {
             EncryptedPasskey passkey = passkeyService.fetchPasskey(userId, rpId);
             

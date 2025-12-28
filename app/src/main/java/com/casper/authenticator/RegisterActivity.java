@@ -1,5 +1,6 @@
 package com.casper.authenticator;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -67,8 +68,17 @@ public class RegisterActivity extends AppCompatActivity {
         rpUrlEditText = findViewById(R.id.rpUrlEditText);
         registerButton = findViewById(R.id.registerButton);
         statusTextView = findViewById(R.id.statusTextView);
+        Button backButton = findViewById(R.id.backButton);
         
         registerButton.setOnClickListener(v -> registerPasskey());
+        
+        // Back button to return to home
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
     }
     
     private void registerPasskey() {
@@ -105,10 +115,13 @@ public class RegisterActivity extends AppCompatActivity {
             // 4. Encrypt private key: s̃ = HKDF(w*, z) XOR s
             byte[] encryptedPrivateKey = casperCrypto.encryptPasskey(realPrivateKey, realSecret, z);
             
-            // 5. Create PasskeyData for PMS
+            // 5. Normalize rpId (use URL as-is, or extract domain)
+            String rpId = rpUrl;
+            
+            // Create PasskeyData for PMS
             PasskeyData passkeyData = new PasskeyData(
                     userId,
-                    rpUrl,
+                    rpId,
                     encryptedPrivateKey,
                     realPublicKey.getEncoded(),
                     detectionSecrets,
@@ -187,6 +200,14 @@ public class RegisterActivity extends AppCompatActivity {
                         statusTextView.setText("Registration successful!");
                         Toast.makeText(RegisterActivity.this, 
                                 getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
+                        
+                        // Navigate back to home after successful registration
+                        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }, 1500); // Wait 1.5 seconds to show success message
                     } else {
                         statusTextView.setText("RP registration failed");
                         Toast.makeText(RegisterActivity.this, 

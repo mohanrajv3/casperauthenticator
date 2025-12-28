@@ -85,9 +85,11 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         
-        // Fetch encrypted passkey from PMS
+        // Fetch encrypted passkey from PMS (use same rpId as stored during registration)
         PMSApi pmsApi = ApiClient.getPmsRetrofit(ApiClient.PMS_BASE_URL).create(PMSApi.class);
-        Call<PasskeyData> call = pmsApi.fetchPasskey(userId, rpUrl);
+        // Retrofit will automatically URL-encode path parameters
+        String rpId = rpUrl; // Use the same rpId format as during registration
+        Call<PasskeyData> call = pmsApi.fetchPasskey(userId, rpId);
         call.enqueue(new Callback<PasskeyData>() {
             @Override
             public void onResponse(Call<PasskeyData> call, Response<PasskeyData> response) {

@@ -73,9 +73,10 @@ public class RestoreActivity extends AppCompatActivity {
         statusTextView.setText("Fetching passkey from cloud...");
         restoreButton.setEnabled(false);
         
-        // Fetch encrypted passkey from PMS
+        // Fetch encrypted passkey from PMS (use same rpId as stored during registration)
         PMSApi pmsApi = ApiClient.getPmsRetrofit(ApiClient.PMS_BASE_URL).create(PMSApi.class);
-        Call<PasskeyData> call = pmsApi.fetchPasskey(userId, rpUrl);
+        String rpId = rpUrl; // Use the same rpId format as during registration
+        Call<PasskeyData> call = pmsApi.fetchPasskey(userId, rpId);
         call.enqueue(new Callback<PasskeyData>() {
             @Override
             public void onResponse(Call<PasskeyData> call, Response<PasskeyData> response) {
