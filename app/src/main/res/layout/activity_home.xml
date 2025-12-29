@@ -38,6 +38,15 @@
         android:layout_height="wrap_content"
         android:text="@string/restore_passkey"
         android:textSize="16sp"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/accountListButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Accounts (TOTP)"
+        android:textSize="16sp"
         android:padding="16dp" />
 
 </LinearLayout>

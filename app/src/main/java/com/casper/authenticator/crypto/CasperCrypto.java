@@ -222,5 +222,21 @@ public class CasperCrypto {
     public String getUserId() {
         return encryptedPrefs.getString(KEY_USER_ID, null);
     }
+    
+    /**
+     * Save PIN to secure encrypted storage.
+     * Uses EncryptedSharedPreferences for secure storage.
+     */
+    public void savePin(String pin) {
+        encryptedPrefs.edit().putString("pin", pin).apply();
+    }
+    
+    /**
+     * Get PIN from secure encrypted storage.
+     * Returns null if PIN is not found.
+     */
+    public String getPin() {
+        return encryptedPrefs.getString("pin", null);
+    }
 }
 

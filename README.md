@@ -267,24 +267,110 @@ RP will start on **http://localhost:8081**
 
 ## 🎮 How to Run
 
-### Running Locally (Development)
+### Running Backend Services
 
-1. **Start PMS:**
-   ```bash
-   cd pms-backend/casper-pms
-   mvn spring-boot:run
-   ```
+#### Option 1: Run Both Services Using Script (Recommended)
 
-2. **Start RP:**
-   ```bash
-   cd rp-backend/casper-rp
-   mvn spring-boot:run
-   ```
+```bash
+# From project root directory
+./RUN_BACKENDS.sh
+```
 
-3. **Run Android App:**
-   - Open project in Android Studio
-   - Connect Android device or start emulator
-   - Click "Run" button or `Shift+F10`
+This script will start both PMS and RP in separate terminal windows.
+
+#### Option 2: Run Services Manually
+
+**Terminal 1 - Start PMS (Port 8080):**
+```bash
+cd pms-backend/casper-pms
+mvn spring-boot:run
+```
+
+**Terminal 2 - Start RP (Port 8081):**
+```bash
+cd rp-backend/casper-rp
+mvn spring-boot:run
+```
+
+#### Option 3: Run in Background
+
+**Start PMS in background:**
+```bash
+cd pms-backend/casper-pms
+mvn spring-boot:run > pms.log 2>&1 &
+```
+
+**Start RP in background:**
+```bash
+cd rp-backend/casper-rp
+mvn spring-boot:run > rp.log 2>&1 &
+```
+
+**Check if services are running:**
+```bash
+# Check PMS (port 8080)
+curl http://localhost:8080/health
+
+# Check RP (port 8081)
+curl http://localhost:8081/health
+```
+
+**Stop background services:**
+```bash
+# Find and kill PMS process
+lsof -ti:8080 | xargs kill -9
+
+# Find and kill RP process
+lsof -ti:8081 | xargs kill -9
+```
+
+### Port Already in Use?
+
+If you get "Port 8080/8081 already in use" error:
+
+**Option 1: Find and kill the process using the port**
+```bash
+# For macOS/Linux
+# Find process using port 8080
+lsof -ti:8080
+
+# Kill the process
+lsof -ti:8080 | xargs kill -9
+
+# For port 8081
+lsof -ti:8081 | xargs kill -9
+```
+
+**Option 2: Change the port in application.properties**
+
+Edit `pms-backend/casper-pms/src/main/resources/application.properties`:
+```properties
+server.port=8082  # Change from 8080 to 8082
+```
+
+Edit `rp-backend/casper-rp/src/main/resources/application.properties`:
+```properties
+server.port=8083  # Change from 8081 to 8083
+```
+
+**Important:** If you change ports, also update the Android app's `ApiClient.java`:
+```java
+// Update these URLs if you changed ports
+private static final String PMS_BASE_URL = "http://10.0.2.2:8082/";  // New PMS port
+private static final String RP_BASE_URL = "http://10.0.2.2:8083/";   // New RP port
+```
+
+### Running Android App
+
+1. **Start backend services first** (PMS on 8080, RP on 8081)
+2. **Open project in Android Studio:**
+   - File → Open → Select project directory
+3. **Sync Gradle:**
+   - File → Sync Project with Gradle Files
+4. **Run the app:**
+   - Click "Run" button (▶️) or press `Shift+F10`
+   - Select device/emulator
+   - App will install and launch
 
 ### Android Emulator Network Configuration
 
@@ -584,10 +670,32 @@ This is a **research/demo implementation**. For production use:
 You now have a complete working CASPER authenticator system! 
 
 **Quick Start:**
-1. Start PMS: `cd pms-backend/casper-pms && mvn spring-boot:run`
-2. Start RP: `cd rp-backend/casper-rp && mvn spring-boot:run`
-3. Run Android app from Android Studio
-4. Register passkey → Login → Test breach detection
+1. **Clear ports (if needed):**
+   ```bash
+   ./kill-ports.sh  # Kills any processes on ports 8080/8081
+   ```
+
+2. **Start PMS:**
+   ```bash
+   cd pms-backend/casper-pms
+   mvn spring-boot:run
+   ```
+
+3. **Start RP (in a new terminal):**
+   ```bash
+   cd rp-backend/casper-rp
+   mvn spring-boot:run
+   ```
+
+4. **Run Android app from Android Studio**
+5. **Register passkey → Login → Test breach detection**
+
+**Alternative:** Use the convenience script:
+```bash
+./RUN_BACKENDS.sh  # Starts both services
+```
+
+**Note:** If you see "Port already in use" errors, run `./kill-ports.sh` first to clear the ports.
 
 **Enjoy building secure authentication systems! 🔐**
 

@@ -51,7 +51,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
     
     private void navigateToHome() {
-        Intent intent = new Intent(WelcomeActivity.this, HomeActivity.class);
+        // Navigate to AccountListActivity (main authenticator screen)
+        Intent intent = new Intent(WelcomeActivity.this, AccountListActivity.class);
         startActivity(intent);
         finish();
     }

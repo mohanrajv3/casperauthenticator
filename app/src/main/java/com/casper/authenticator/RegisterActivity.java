@@ -232,8 +232,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
     
     private String getPin() {
-        SharedPreferences securePrefs = getSharedPreferences("secure_prefs", MODE_PRIVATE);
-        return securePrefs.getString("pin", null);
+        // Get PIN from secure encrypted storage
+        return casperCrypto.getPin();
     }
 }
 
