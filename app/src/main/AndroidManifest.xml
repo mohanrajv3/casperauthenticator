@@ -5,6 +5,13 @@
     <!-- Internet permission for API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Camera permission for QR code scanning -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <!-- Biometric permission -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
         android:allowBackup="true"
@@ -55,6 +62,17 @@
         <!-- Restore Passkey Activity -->
         <activity
             android:name=".RestoreActivity"
+            android:exported="false" />
+        
+        <!-- Lock Screen Activity -->
+        <activity
+            android:name=".LockScreenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        
+        <!-- QR Code Scanner Activity -->
+        <activity
+            android:name=".QRCodeScannerActivity"
             android:exported="false" />
         
     </application>

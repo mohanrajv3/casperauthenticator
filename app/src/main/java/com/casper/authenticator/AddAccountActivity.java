@@ -54,6 +54,16 @@ public class AddAccountActivity extends AppCompatActivity {
         
         saveButton.setOnClickListener(v -> saveAccount());
         cancelButton.setOnClickListener(v -> finish());
+        
+        // Add QR code scan button if available
+        Button scanQRButton = findViewById(R.id.scanQRButton);
+        if (scanQRButton != null) {
+            scanQRButton.setOnClickListener(v -> {
+                android.content.Intent intent = new android.content.Intent(
+                    this, QRCodeScannerActivity.class);
+                startActivity(intent);
+            });
+        }
     }
     
     private void saveAccount() {

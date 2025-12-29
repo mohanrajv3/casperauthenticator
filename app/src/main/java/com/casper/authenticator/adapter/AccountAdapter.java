@@ -156,13 +156,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
                         secret, account.period, algorithm, account.digits);
                 }
                 
-                // Copy to clipboard
-                ClipboardManager clipboard = (ClipboardManager) 
-                    context.getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("OTP Code", otp);
-                clipboard.setPrimaryClip(clip);
+                // Copy to clipboard with auto-clear (30 seconds)
+                com.casper.authenticator.security.SecurityManager securityManager = 
+                    new com.casper.authenticator.security.SecurityManager(context);
+                securityManager.copyToClipboardWithAutoClear(otp, 30000); // Clear after 30 seconds
                 
-                Toast.makeText(context, "OTP code copied to clipboard", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "OTP code copied to clipboard (auto-clears in 30s)", 
+                    Toast.LENGTH_SHORT).show();
                 
             } catch (Exception e) {
                 Toast.makeText(context, "Failed to copy OTP", Toast.LENGTH_SHORT).show();

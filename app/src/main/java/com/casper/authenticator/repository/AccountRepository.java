@@ -29,10 +29,15 @@ public class AccountRepository {
     private Gson gson;
     
     public AccountRepository(Context context) {
-        AccountDatabase database = AccountDatabase.getInstance(context);
-        this.accountDao = database.accountDao();
-        this.casperCrypto = new CasperCrypto(context);
-        this.gson = new Gson();
+        try {
+            AccountDatabase database = AccountDatabase.getInstance(context);
+            this.accountDao = database.accountDao();
+            this.casperCrypto = new CasperCrypto(context);
+            this.gson = new Gson();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to initialize AccountRepository", e);
+            throw new RuntimeException("Failed to initialize AccountRepository", e);
+        }
     }
     
     /**

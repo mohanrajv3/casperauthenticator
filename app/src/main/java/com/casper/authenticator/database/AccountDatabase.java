@@ -31,13 +31,19 @@ public abstract class AccountDatabase extends RoomDatabase {
      */
     public static synchronized AccountDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(
-                    context.getApplicationContext(),
-                    AccountDatabase.class,
-                    DATABASE_NAME
-            )
-            .allowMainThreadQueries() // For simplicity - consider using background threads in production
-            .build();
+            try {
+                INSTANCE = Room.databaseBuilder(
+                        context.getApplicationContext(),
+                        AccountDatabase.class,
+                        DATABASE_NAME
+                )
+                .allowMainThreadQueries() // For simplicity - consider using background threads in production
+                .fallbackToDestructiveMigration() // Allow database recreation on schema changes
+                .build();
+            } catch (Exception e) {
+                android.util.Log.e("AccountDatabase", "Failed to initialize database", e);
+                throw new RuntimeException("Failed to initialize database", e);
+            }
         }
         return INSTANCE;
     }
