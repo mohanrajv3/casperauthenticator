@@ -43,6 +43,15 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, RestoreActivity.class);
             startActivity(intent);
         });
+        
+        // Add button to go to Account List (main authenticator screen)
+        Button accountListButton = findViewById(R.id.accountListButton);
+        if (accountListButton != null) {
+            accountListButton.setOnClickListener(v -> {
+                Intent intent = new Intent(HomeActivity.this, AccountListActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 }
 

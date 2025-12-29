@@ -36,6 +36,7 @@ public class PinSetupActivity extends AppCompatActivity {
         pinEditText = findViewById(R.id.pinEditText);
         confirmPinEditText = findViewById(R.id.confirmPinEditText);
         setupButton = findViewById(R.id.setupButton);
+        Button backButton = findViewById(R.id.backButton);
         
         setupButton.setOnClickListener(v -> {
             String pin = pinEditText.getText().toString();
@@ -52,40 +53,51 @@ public class PinSetupActivity extends AppCompatActivity {
                 return;
             }
             
-            // Save PIN (in real implementation, would hash it)
-            // For demo, we store a hash (not the actual PIN)
-            savePin(pin);
-            
             // Generate and save user ID
             String userId = UUID.randomUUID().toString();
             com.casper.authenticator.crypto.CasperCrypto crypto = 
                     new com.casper.authenticator.crypto.CasperCrypto(this);
             crypto.saveUserId(userId);
             
+            // Save PIN to secure encrypted storage
+            crypto.savePin(pin);
+            
+            // Also save PIN hash for verification (not the actual PIN)
+            savePinHash(pin);
+            
             Toast.makeText(this, getString(R.string.setup_complete), Toast.LENGTH_SHORT).show();
             
-            // Navigate to home
-            Intent intent = new Intent(PinSetupActivity.this, HomeActivity.class);
+            // Navigate to Account List (main authenticator screen)
+            Intent intent = new Intent(PinSetupActivity.this, AccountListActivity.class);
             startActivity(intent);
             finish();
         });
+        
+        // Back button - go back to welcome (but PIN setup is required, so warn user)
+        backButton.setOnClickListener(v -> {
+            new android.app.AlertDialog.Builder(PinSetupActivity.this)
+                .setTitle("PIN Setup Required")
+                .setMessage("You must set up a PIN to use the app. Continue setup?")
+                .setPositiveButton("Continue", null)
+                .setNegativeButton("Cancel", (dialog, which) -> finish())
+                .show();
+        });
     }
     
-    private void savePin(String pin) {
+    /**
+     * Save PIN hash for verification purposes only.
+     * The actual PIN is stored securely in EncryptedSharedPreferences via CasperCrypto.
+     */
+    private void savePinHash(String pin) {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         
-        // Store hash of PIN (for verification, not the actual PIN)
-        // In production, use proper password hashing
+        // Store hash of PIN (for verification only, not the actual PIN)
+        // In production, use proper password hashing (PBKDF2, Argon2, etc.)
         String pinHash = String.valueOf(pin.hashCode());
         editor.putString(KEY_PIN_HASH, pinHash);
         editor.putBoolean(KEY_PIN_SET, true);
         editor.apply();
-        
-        // Also store PIN in secure storage for CASPER operations
-        // (In production, use Android Keystore or secure enclave)
-        SharedPreferences securePrefs = getSharedPreferences("secure_prefs", MODE_PRIVATE);
-        securePrefs.edit().putString("pin", pin).apply();
     }
 }
 

@@ -1,5 +1,6 @@
 package com.casper.authenticator;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,6 +14,10 @@ import com.casper.authenticator.crypto.CasperCrypto;
 import com.casper.authenticator.models.PasskeyData;
 import com.casper.authenticator.network.ApiClient;
 import com.casper.authenticator.network.PMSApi;
+
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,8 +57,17 @@ public class RestoreActivity extends AppCompatActivity {
         pinEditText = findViewById(R.id.pinEditText);
         restoreButton = findViewById(R.id.restoreButton);
         statusTextView = findViewById(R.id.statusTextView);
+        Button backButton = findViewById(R.id.backButton);
         
         restoreButton.setOnClickListener(v -> restorePasskey());
+        
+        // Back button to return to home
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(RestoreActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
     }
     
     private void restorePasskey() {
@@ -86,14 +100,28 @@ public class RestoreActivity extends AppCompatActivity {
                     if (passkeyData != null) {
                         // Verify PIN can decrypt the passkey
                         try {
+                            com.casper.authenticator.crypto.CasperCrypto restoreCrypto = 
+                                    new com.casper.authenticator.crypto.CasperCrypto(RestoreActivity.this);
                             com.casper.authenticator.models.DetectionSecrets detectionSecrets = 
                                     passkeyData.getDetectionSecrets();
-                            byte[] realSecret = detectionSecrets.getRealSecretAsBytes();
                             
-                            // Try to decrypt (if PIN is wrong, this will fail or produce garbage)
+                            // Calculate what index the entered PIN would select
+                            byte[][] secrets = detectionSecrets.getSecretsAsBytes();
+                            int calculatedIndex = calculateRealSecretIndex(pin, secrets.length);
+                            int storedRealIndex = detectionSecrets.getRealSecretIndex();
+                            
+                            // If the entered PIN selects a different index than stored, PIN is wrong
+                            if (calculatedIndex != storedRealIndex) {
+                                throw new Exception("Invalid PIN - index mismatch");
+                            }
+                            
+                            // Use the real secret from stored index to decrypt
+                            byte[] realSecret = secrets[storedRealIndex];
                             byte[] encryptedPrivateKey = passkeyData.getEncryptedPrivateKeyAsBytes();
                             byte[] z = passkeyData.getZAsBytes();
-                            byte[] privateKeyBytes = casperCrypto.decryptPasskey(
+                            
+                            // Try to decrypt (will fail if wrong secret is used)
+                            byte[] privateKeyBytes = restoreCrypto.decryptPasskey(
                                     encryptedPrivateKey, realSecret, z);
                             
                             // If we get here, decryption succeeded
@@ -127,6 +155,23 @@ public class RestoreActivity extends AppCompatActivity {
                         "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    
+    /**
+     * Calculate real secret index from PIN (same logic as in CasperCrypto).
+     * This matches the CASPER algorithm: w* = W[H(PIN) mod k]
+     */
+    private int calculateRealSecretIndex(String pin, int secretCount) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] pinHash = digest.digest(pin.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            
+            // Convert first 4 bytes to integer and take modulo
+            int hashValue = ByteBuffer.wrap(Arrays.copyOf(pinHash, 4)).getInt();
+            return Math.abs(hashValue % secretCount);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to calculate real secret index", e);
+        }
     }
 }
 

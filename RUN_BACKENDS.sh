@@ -10,6 +10,14 @@ echo ""
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
+# Kill existing processes on ports 8080 and 8081
+echo "Checking for existing processes on ports 8080 and 8081..."
+lsof -ti:8080 | xargs kill -9 2>/dev/null
+lsof -ti:8081 | xargs kill -9 2>/dev/null
+sleep 1
+echo "Ports cleared (if any processes were running)"
+echo ""
+
 # Check if Maven is installed
 if ! command -v mvn &> /dev/null; then
     echo "❌ Error: Maven is not installed."

@@ -35,6 +35,12 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
+        <activity
+            android:name=".AccountListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddAccountActivity"
+            android:exported="false" />
         
         <!-- Register Passkey Activity -->
         <activity

@@ -1,5 +1,6 @@
 package com.casper.authenticator;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -63,8 +64,17 @@ public class LoginActivity extends AppCompatActivity {
         rpUrlEditText = findViewById(R.id.rpUrlEditText);
         loginButton = findViewById(R.id.loginButton);
         statusTextView = findViewById(R.id.statusTextView);
+        Button backButton = findViewById(R.id.backButton);
         
         loginButton.setOnClickListener(v -> loginWithPasskey());
+        
+        // Back button to return to home
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        });
     }
     
     private void loginWithPasskey() {
@@ -205,8 +215,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     
     private String getPin() {
-        SharedPreferences securePrefs = getSharedPreferences("secure_prefs", MODE_PRIVATE);
-        return securePrefs.getString("pin", null);
+        // Get PIN from secure encrypted storage
+        return casperCrypto.getPin();
     }
 }
 
