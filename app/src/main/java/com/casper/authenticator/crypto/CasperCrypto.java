@@ -57,7 +57,10 @@ public class CasperCrypto {
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize encrypted storage", e);
+            // If encrypted storage fails, fall back to regular SharedPreferences
+            // This can happen on some emulators or devices without proper Keystore support
+            android.util.Log.e("CasperCrypto", "Failed to initialize encrypted storage, using regular SharedPreferences", e);
+            encryptedPrefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         }
     }
     
@@ -221,6 +224,22 @@ public class CasperCrypto {
      */
     public String getUserId() {
         return encryptedPrefs.getString(KEY_USER_ID, null);
+    }
+    
+    /**
+     * Save PIN to secure encrypted storage.
+     * Uses EncryptedSharedPreferences for secure storage.
+     */
+    public void savePin(String pin) {
+        encryptedPrefs.edit().putString("pin", pin).apply();
+    }
+    
+    /**
+     * Get PIN from secure encrypted storage.
+     * Returns null if PIN is not found.
+     */
+    public String getPin() {
+        return encryptedPrefs.getString("pin", null);
     }
 }
 

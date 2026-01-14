@@ -3,69 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@android:color/white">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pin_setup_title"
+        android:text="CASPER Authenticator"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pin_setup_instruction"
-        android:textSize="16sp"
+        android:text="App is locked"
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"
         android:layout_marginBottom="32dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pin_enter"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
 
     <EditText
         android:id="@+id/pinEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Enter PIN"
         android:inputType="numberPassword"
-        android:hint="Enter 4-6 digit PIN"
         android:maxLength="6"
-        android:layout_marginBottom="16dp" />
+        android:textSize="18sp"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:drawable/edit_text" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pin_confirm"
-        android:textSize="14sp"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/confirmPinEditText"
+        android:id="@+id/lockoutTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberPassword"
-        android:hint="Confirm PIN"
-        android:maxLength="6"
-        android:layout_marginBottom="32dp" />
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone" />
 
     <Button
-        android:id="@+id/setupButton"
+        android:id="@+id/unlockButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Complete Setup"
+        android:text="Unlock"
         android:textSize="16sp"
+        android:padding="16dp"
         android:layout_marginBottom="16dp" />
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/biometricButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/cancel"
-        android:textSize="16sp" />
+        android:text="Use Biometric"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:visibility="gone" />
 
 </LinearLayout>
 
